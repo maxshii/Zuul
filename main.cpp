@@ -24,7 +24,7 @@ int main() {
   Item toilet(d3);
 
   char c1[20] = "This is a room2.";
-  char c2[20] = "Pogger";
+  char c2[20] = "Poger";
   //char c3[20] = "Toilet";
   Room room2(c1);
   Item pogger(c2);
