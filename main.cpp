@@ -20,28 +20,84 @@ void pickUp(Room *room, vector<Item> &inventory, char itemName[]);
 void putDown(Room *room, vector<Item> &inventory, char itemName[]);
 
 int main() {
-  //create the rooms
-  Room r1((char*)"You are currently in the 1-20 lab.  All the cool people are hanging out here.");
-  Room r2(((char*)"You are in one hall."));
-  
+  //create the rooms (Zuul locations and items taken from my Java Zuul assignment)
+  Room onetwenty((char*)"You are currently in the 1-20 lab.  All the cool people are hanging out here. Pick up \"Win\" to win");
+  Room outside = ((char*)"You are outside the main entrance of Sunset");
+  Room mainoffice((char*)"You are in the main office");
+  Room mainhall((char*)"You are in main hall");
+  Room onehall((char*)"You are in one hall");
+  Room cafeteria((char*)"You are in the cafeteria. It smells very yumyum.");
+  Room twohall((char*)"You are in two hall");
+  Room gym((char*)"You are in the gym. You start chasing balls");
+  Room threehall((char*)"You are in three hall");
+  Room ahall((char*)"You are in A hall. All the unpog classes are here");
+  Room hhall((char*)"You are in H hall. Math is taught here");
+  Room ghall((char*)"You are in G hall. It smells like tacos in here");
+  Room bathroom((char*)"You are in the bathroom. It smells like mangos");
+  Room gamercave((char*)"You are in the Gamer Cave. All the gamers are hanging out here");
+  Room dungeon((char*)"You are in the dungeon. It is dank and musty.");
+		
   //set the exits to the rooms
-  setExit(r1, 'N', r2);
+  setExit(onetwenty, 'N', onehall);
+  
+  setExit(outside, 'S', mainoffice);
+
+  setExit(mainoffice, 'N', outside);
+  setExit(mainoffice, 'W', mainhall);
+
+  setExit(mainhall, 'E', mainoffice);
+  setExit(mainhall, 'W', onehall);
+
+  setExit(onehall, 'E', mainhall);
+  setExit(onehall, 'W', cafeteria);
+  setExit(onehall, 'S', onetwenty);
+
+  setExit(cafeteria, 'E', onehall);
+  setExit(cafeteria, 'W', twohall);
+
+  setExit(twohall, 'E', cafeteria);
+  setExit(twohall, 'W', gym);
+  setExit(twohall, 'N', ahall);
+  setExit(twohall, 'S', hhall);
+
+  setExit(gym, 'E', twohall);
+  setExit(gym, 'W', threehall);
+
+  setExit(threehall, 'E', gym);
+  setExit(threehall, 'S', bathroom);
+  setExit(threehall, 'W', dungeon);
+
+  setExit(ahall, 'S', twohall);
+
+  setExit(hhall, 'N', twohall);
+
+  setExit(bathroom, 'N', threehall);
+
+  setExit(gamercave, 'E', dungeon);
+
+  setExit(dungeon, 'E', threehall);
+  setExit(dungeon, 'W', gamercave);
 
   //set items of rooms
-  Item i1((char*)"POG");
-  setItem(r1, i1);
+  Item i1((char*)"WIN");
+  setItem(onetwenty, i1);
+  
+  Item i2((char*)"BALL");
+  Item i3((char*)"SOCK");
+  setItem(gym, i2);
+  setItem(gym, i3);
 
-  vector<Item> inventory;
-  Room *currentRoom = &r1;
-  vector<Item>::iterator it;
-      
-    cout << "Items: ";
-    for(it = r1.items.begin(); it < r1.items.end(); ++it)
-    {
-       cout << it->name << " ";
-    }
-    cout << endl;
+  Item i4((char*)"TOILET");
+  setItem(bathroom, i4);
 
+  Item i5((char*)"FOOD");
+  setItem(cafeteria, i5);
+
+
+  vector<Item> inventory; 
+  Room *currentRoom = &onetwenty; //set start point of game
+
+  //loop until game is won or quit     
   while(true)
   {
     cout << currentRoom->description << endl;
@@ -98,7 +154,13 @@ int main() {
       break;
     }
     
-
+    for(it = inventory.begin(); it < inventory.end(); ++it)
+    {
+      if(strcmp(it->name, "WIN") == 0)
+      {
+        break;
+      }
+    }
   }
 } 
 
