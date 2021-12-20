@@ -9,9 +9,9 @@
 
 using namespace::std;
 
-Room::Room(char newDescription[80])
+Room::Room(char newDescription[80], vector<Item> newItems)
 {
   strcpy(description, newDescription);
-  vector<Item> items;
+  vector<Item> items = newItems;
   map<char, Room*> exits;
 }
