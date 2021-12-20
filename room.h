@@ -15,8 +15,9 @@ using namespace::std;
 class Room
 {
   public:
-    Room(char newDescription[80], vector<Item> newItems);
+    Room(char newDescription[80]);
     char description[80];
     vector<Item> items;
+    
     map<char, Room*> exits;
 };

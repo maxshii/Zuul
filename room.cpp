@@ -6,12 +6,12 @@
  
 #include "room.h"
 #include <cstring>
-
+#include <iostream>
 using namespace::std;
 
-Room::Room(char newDescription[80], vector<Item> newItems)
+Room::Room(char newDescription[80])
 {
   strcpy(description, newDescription);
-  vector<Item> items = newItems;
+  vector<Item> items;
   map<char, Room*> exits;
 }
