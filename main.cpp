@@ -13,7 +13,7 @@
 
 using namespace::std;
 
-void setExit(Room &roomToLeave, char direction, Room roomToEnter);
+void setExit(Room &roomToLeave, char direction, Room *roomToEnter);
 void setItem(Room &room, Item item);
 void changeRoom(Room **room, char direction);
 void pickUp(Room *room, vector<Item> &inventory, char itemName[]);
@@ -21,7 +21,7 @@ void putDown(Room *room, vector<Item> &inventory, char itemName[]);
 
 int main() {
   //create the rooms (Zuul locations and items taken from my Java Zuul assignment)
-  Room onetwenty((char*)"You are currently in the 1-20 lab.  All the cool people are hanging out here. Pick up \"Win\" to win");
+  Room onetwenty((char*)"You are currently in the 1-20 lab.  All the cool people are hanging out here. Pick up \"WIN\" to win");
   Room outside = ((char*)"You are outside the main entrance of Sunset");
   Room mainoffice((char*)"You are in the main office");
   Room mainhall((char*)"You are in main hall");
@@ -38,49 +38,51 @@ int main() {
   Room dungeon((char*)"You are in the dungeon. It is dank and musty.");
 		
   //set the exits to the rooms
-  setExit(onetwenty, 'N', onehall);
+  setExit(onetwenty, 'N', &onehall);
   
-  setExit(outside, 'S', mainoffice);
+  setExit(outside, 'S', &mainoffice);
 
-  setExit(mainoffice, 'N', outside);
-  setExit(mainoffice, 'W', mainhall);
+  setExit(mainoffice, 'N', &outside);
+  setExit(mainoffice, 'W', &mainhall);
 
-  setExit(mainhall, 'E', mainoffice);
-  setExit(mainhall, 'W', onehall);
+  setExit(mainhall, 'E', &mainoffice);
+  setExit(mainhall, 'W', &onehall);
 
-  setExit(onehall, 'E', mainhall);
-  setExit(onehall, 'W', cafeteria);
-  setExit(onehall, 'S', onetwenty);
+  setExit(onehall, 'E', &mainhall);
+  setExit(onehall, 'W', &cafeteria);
+  setExit(onehall, 'S', &onetwenty);
 
-  setExit(cafeteria, 'E', onehall);
-  setExit(cafeteria, 'W', twohall);
+  setExit(cafeteria, 'E', &onehall);
+  setExit(cafeteria, 'W', &twohall);
 
-  setExit(twohall, 'E', cafeteria);
-  setExit(twohall, 'W', gym);
-  setExit(twohall, 'N', ahall);
-  setExit(twohall, 'S', hhall);
+  setExit(twohall, 'N', &ahall);
+  setExit(twohall, 'E', &cafeteria);
+  setExit(twohall, 'W', &gym);
+  setExit(twohall, 'S', &hhall);
 
-  setExit(gym, 'E', twohall);
-  setExit(gym, 'W', threehall);
+  setExit(gym, 'E', &twohall);
+  setExit(gym, 'W', &threehall);
 
-  setExit(threehall, 'E', gym);
-  setExit(threehall, 'S', bathroom);
-  setExit(threehall, 'W', dungeon);
+  setExit(threehall, 'E', &gym);
+  setExit(threehall, 'S', &bathroom);
+  setExit(threehall, 'W', &dungeon);
 
-  setExit(ahall, 'S', twohall);
+  setExit(ahall, 'S', &twohall);
 
-  setExit(hhall, 'N', twohall);
+  setExit(hhall, 'N', &twohall);
 
-  setExit(bathroom, 'N', threehall);
+  setExit(bathroom, 'N', &threehall);
 
-  setExit(gamercave, 'E', dungeon);
+  setExit(gamercave, 'E', &dungeon);
 
-  setExit(dungeon, 'E', threehall);
-  setExit(dungeon, 'W', gamercave);
+  setExit(dungeon, 'E', &threehall);
+  setExit(dungeon, 'W', &gamercave);
 
   //set items of rooms
   Item i1((char*)"WIN");
   setItem(onetwenty, i1);
+  Item i0((char*)"MR.GALBRAITH");
+  setItem(onetwenty, i0);
   
   Item i2((char*)"BALL");
   Item i3((char*)"SOCK");
@@ -93,17 +95,18 @@ int main() {
   Item i5((char*)"FOOD");
   setItem(cafeteria, i5);
 
-
+  
   vector<Item> inventory; 
   Room *currentRoom = &onetwenty; //set start point of game
 
   //loop until game is won or quit     
-  while(true)
+  bool exit = false;
+  while(exit == false)
   {
-    cout << currentRoom->description << endl;
-
-    vector<Item>::iterator it;
-      
+    cout << currentRoom->description << endl; 
+    
+    //print items in room and inventory
+    vector<Item>::iterator it;   
     cout << "Items in room: ";
     for(it = currentRoom->items.begin(); it < currentRoom->items.end(); ++it)
     {
@@ -118,39 +121,40 @@ int main() {
     }
     cout << endl;
 
-    
+    //enter commands
     cout << "\nEnter a command(GO, PICKUP, DROP, QUIT)\n";
-
     char input[80];
     cin.getline(input, 80);   
 
-    if(strcmp(input, "GO") == 0)
+    if(strcmp(input, "GO") == 0) //change room based on direction
     {
       cout << "Choose a direction to go:\n";
- 
+
       for(pair<char, Room*> element : currentRoom->exits)
       {
         cout << element.first << "\n";
       }
-      char direction;
+
+      char direction = '\n';
       cin >> direction;
       cin.ignore();  
       changeRoom(&currentRoom, direction);
     }
-    else if(strcmp(input, "DROP") == 0)
+    else if(strcmp(input, "PICKUP") == 0) //pickup item
     {
       cout << "Enter item to pick up: ";
       cin.getline(input, 80); 
       pickUp(currentRoom, inventory, input);
     }
-    else if(strcmp(input, "DROP") == 0)
+    else if(strcmp(input, "DROP") == 0) //drop item
     {
       cout << "Enter item to put down: ";
       cin.getline(input, 80); 
       putDown(currentRoom, inventory, input);
     }
-    else if(strcmp(input, "QUIT") == 0)
+    else if(strcmp(input, "QUIT") == 0) //quit game
     {
+      cout << "You quit :(\n";
       break;
     }
     
@@ -158,18 +162,20 @@ int main() {
     {
       if(strcmp(it->name, "WIN") == 0)
       {
-        break;
+        cout << "You won!\n";
+        exit = true;
       }
     }
   }
 } 
 
-//adds a direction and a room address to the Room's map of exits
-void setExit(Room &roomToLeave, char direction, Room roomToEnter)
+//adds a direction and a room pointer to the Room's map of exits
+void setExit(Room &roomToLeave, char direction, Room *roomToEnter)
 {
-  roomToLeave.exits.insert({direction, &roomToEnter});
+  roomToLeave.exits.insert({direction, roomToEnter});
 }
 
+//puts and item into a room
 void setItem(Room &room, Item item)
 {
   room.items.push_back(item);
@@ -182,7 +188,7 @@ void changeRoom(Room **room, char direction)
   {
     if(element.first == direction)
     {
-      *room = (element.second);
+      *room = (element.second); //makes room point to new room
     }   
   } 
 }
@@ -192,14 +198,13 @@ void pickUp(Room *room, vector<Item> &inventory, char itemName[])
 {
   
   vector<Item>::iterator it;
-    
   for(it = room->items.begin(); it < room->items.end(); ++it)
   {
     if(strcmp(it->name, itemName) == 0)
     {
       cout << "Picked up " << it->name <<endl;
-      inventory.push_back(*it);
-      room->items.erase(it);
+      inventory.push_back(*it); //add to inventory
+      room->items.erase(it); //remove from room
     }
   }
 }

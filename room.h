@@ -15,9 +15,8 @@ using namespace::std;
 class Room
 {
   public:
-    Room(char newDescription[80]);
-    char description[80];
+    Room(char newDescription[200]);
+    char description[200];
     vector<Item> items;
-    
-    map<char, Room*> exits;
+    map<char, Room*> exits; //map with key values that are directions represented by a character and mapped values of Room pointers
 };

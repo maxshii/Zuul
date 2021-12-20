@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace::std;
 
-Room::Room(char newDescription[80])
+Room::Room(char newDescription[200])
 {
   strcpy(description, newDescription);
   vector<Item> items;

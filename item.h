@@ -11,8 +11,7 @@ class Item
 {
   public:
     Item(char newName[80]);
-    char name[80];
-    
+    char name[80];   
 };
 
 #endif
