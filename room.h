@@ -18,5 +18,5 @@ class Room
     Room(char newDescription[80]);
     char description[80];
     vector<Item> items;
-    map<char, Room> exits;
+    map<char, Room*> exits;
 };

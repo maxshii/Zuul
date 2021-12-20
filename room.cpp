@@ -13,5 +13,5 @@ Room::Room(char newDescription[80])
 {
   strcpy(description, newDescription);
   vector<Item> items;
-  map<char[20], char[20]> exits;
+  map<char, Room*> exits;
 }

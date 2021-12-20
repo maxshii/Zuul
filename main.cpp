@@ -13,9 +13,13 @@
 
 using namespace::std;
 
-void setRoom(Room &room, char direction);
+void setRoom(Room **room, char direction);
+void pickUp(Room *room, vector<Item> &inventory, char itemName[]);
+void putDown(Room *room, vector<Item> &inventory, char itemName[]);
 
 int main() {
+  vector<Item> inventory;
+
   char d1[20] = "This is a room.";
   char d2[20] = "Poop";
   char d3[20] = "Toilet";
@@ -29,55 +33,104 @@ int main() {
   Room room2(c1);
   Item pogger(c2);
 
-  
+  inventory.push_back(pogger);
 
-  room.exits.insert(pair<char, Room>('N', room));
+  room.exits.insert(pair<char, Room*>('N', &room2));
 
   room.items.push_back(poop);
   room.items.push_back(toilet);
 
-  Room currentRoom = room;
-  strcpy(currentRoom.description, "This is new desciripton");
+  Room *currentRoom = &room;
 
-  cout << "current" << currentRoom.description << endl;
-  cout << "room" << room.description << endl;
+  while(true)
+  {
+    cout << currentRoom->description << endl;
+    break;
+    vector<Item>::iterator it;
+      
+    for(it = room.items.begin(); it < room.items.end(); ++it)
+    {
+      cout << "before" << it->name << endl;
+    }
+    for(it = inventory.begin(); it < inventory.end(); ++it)
+    {
+      cout << "in" << it->name << endl;
+    }
+    pickUp(currentRoom, inventory, d2);
 
+      
+    for(it = room.items.begin(); it < room.items.end(); ++it)
+    {
+      cout << "after" << it->name << endl;
+    }
 
-  vector<Item>::iterator it;
+    for(it = inventory.begin(); it < inventory.end(); ++it)
+    {
+      cout << "in" << it->name << endl;
+    }
     
-  for(it = room.items.begin(); it < room.items.end(); ++it)
-  {
-    cout << it->name << endl;
+
+    //for(it = *currentRoom.items.begin(); it < currentRoom.items.end(); ++it)
+    //{
+    //  cout << it->name << endl;
+  // }
+
+    
+
+    //cout << room.items.begin()->name << "\n";
+
+    
+    map<char, Room>::iterator it1;
+    //for(it1 = room.exits.begin(); it1 != room.exits.end(); ++it1)
+    //{
+      //cout << it1->first << endl;
+    //}
+
   }
-
-  for(it = currentRoom.items.begin(); it < currentRoom.items.end(); ++it)
-  {
-    cout << it->name << endl;
-  }
-
-  
-
-  //cout << room.items.begin()->name << "\n";
-
-  
-  map<char, Room>::iterator it1;
-  for(it1 = room.exits.begin(); it1 != room.exits.end(); ++it1)
-  {
-    //cout << it1->first << endl;
-  }
-
-
 } 
 
-void setRoom(Room &room, char direction)
+void setRoom(Room **room, char direction)
 {
-  map<char, Room>::iterator it1;
-  for(it1 = room.exits.begin(); it1 != room.exits.end(); ++it1)
+
+  for(pair<char, Room*> element : (**room).exits)
   {
-    if(it1->first == direction)
+    if(element.first == direction)
     {
-      room = it1->second;
+      //cout << (element.second);
+      *room = (element.second);
     }
+    
   }
   
+}
+
+void pickUp(Room *room, vector<Item> &inventory, char itemName[])
+{
+  
+  vector<Item>::iterator it;
+    
+  for(it = room->items.begin(); it < room->items.end(); ++it)
+  {
+    if(strcmp(it->name, itemName) == 0)
+    {
+      cout << "\ndetecteditem" << it->name <<endl;
+      inventory.push_back(*it);
+      room->items.erase(it);
+    }
+  }
+}
+
+void putDown(Room *room, vector<Item> &inventory, char itemName[])
+{
+  vector<Item>::iterator it;
+    
+  for(it = inventory.begin(); it < inventory.end(); ++it)
+  {
+    if(strcmp(it->name, itemName) == 0)
+    {
+      cout << "\ndetecteditem" << it->name <<endl;
+      room->items.push_back(*it);
+      inventory.erase(it);
+    }
+  }
 }
